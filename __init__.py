@@ -47,9 +47,8 @@ model.eval()
 def get_prediction(img):
     with Image.open(img) as img:
         imgs = [img]
-        model.conf = 0.1
-        model.iou = 0.1 
-        results = model(imgs, size=320) 
+        model.conf = 0.35 
+        results = model(imgs, size=640) 
     return results
 
 def predict(template):
@@ -78,7 +77,7 @@ def predict(template):
 def tmpl():
     return predict('index.html')
 
-@app.route('/index_ru.html', methods=['GET', 'POST'])
+@app.route('/index_ru.html', methods=['POST'])
 def tmpl_ru():
     return predict('index_ru.html')
 
