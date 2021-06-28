@@ -45,10 +45,8 @@ model = torch.hub.load('/var/www/fmdetector/fmdetector/yolov5', 'custom', path='
 model.eval()
 
 def get_prediction(img):
-    with Image.open(img) as img:
-        imgs = [img]
-        model.conf = 0.35 
-        results = model(imgs, size=320) 
+    model.conf = 0.35 
+    results = model(img, size=320) 
     return results
 
 def predict(template):
@@ -60,9 +58,10 @@ def predict(template):
             return
         if allowed_file(file.filename):
             original = secure_filename(file.filename)
-            im = Image.open(file) #consider exif(no-rotation or flip
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], original)
-            im.save(file_path)
+            with Image.open(file) as img:
+                img = ImageOps.exif_transpose(img) #apply exif rotation
+                img.save(file_path) 
             results = get_prediction(file_path)
             results.save(save_dir=Path(RESULT_FOLDER))
             predicted = os.path.splitext(original)[0] + '.jpg'
