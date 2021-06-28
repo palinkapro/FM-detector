@@ -48,7 +48,7 @@ def get_prediction(img):
     with Image.open(img) as img:
         imgs = [img]
         model.conf = 0.35 
-        results = model(imgs, size=640) 
+        results = model(imgs, size=320) 
     return results
 
 def predict(template):
